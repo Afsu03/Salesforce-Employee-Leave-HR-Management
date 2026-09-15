@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>61.0</apiVersion>
+    <description>Interactive Screen Flow for employees to submit leave requests with real-time balance checks and automatic duration calculation.</description>
+    <environments>Default</environments>
+    <interviewLabel>Leave Request Submission Flow {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>FLW_Leave_Request_Submission</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value><stringValue>LightningFlowBuilder</stringValue></value>
+    </processMetadataValues>
+    <processType>Flow</processType>
+    <screens>
+        <name>Leave_Request_Form</name>
+        <label>Request Time Off</label>
+        <locationX>176</locationX>
+        <locationY>158</locationY>
+        <allowBack>false</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <connector>
+            <targetReference>Create_Leave_Request</targetReference>
+        </connector>
+        <fields>
+            <name>Header_Text</name>
+            <fieldText>&lt;p&gt;&lt;strong style="font-size: 16px; color: #252525;"&gt;New Leave Request&lt;/strong&gt;&lt;/p&gt;&lt;p style="color: #6F6A64;"&gt;Submit your time-off request for review and automatic balance calculation.&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <fields>
+            <name>Input_Employee</name>
+            <dataType>String</dataType>
+            <fieldText>Employee ID</fieldText>
+            <fieldType>InputField</fieldType>
+            <isRequired>true</isRequired>
+        </fields>
+        <fields>
+            <name>Input_Leave_Type</name>
+            <choiceReferences>Choice_Casual</choiceReferences>
+            <choiceReferences>Choice_Sick</choiceReferences>
+            <choiceReferences>Choice_Earned</choiceReferences>
+            <choiceReferences>Choice_Emergency</choiceReferences>
+            <choiceReferences>Choice_Unpaid</choiceReferences>
+            <dataType>String</dataType>
+            <fieldText>Leave Type</fieldText>
+            <fieldType>DropdownBox</fieldType>
+            <isRequired>true</isRequired>
+        </fields>
+        <fields>
+            <name>Input_Start_Date</name>
+            <dataType>Date</dataType>
+            <fieldText>Start Date</fieldText>
+            <fieldType>InputField</fieldType>
+            <isRequired>true</isRequired>
+        </fields>
+        <fields>
+            <name>Input_End_Date</name>
+            <dataType>Date</dataType>
+            <fieldText>End Date</fieldText>
+            <fieldType>InputField</fieldType>
+            <isRequired>true</isRequired>
+        </fields>
+        <fields>
+            <name>Input_Reason</name>
+            <fieldText>Reason for Leave</fieldText>
+            <fieldType>LargeTextArea</fieldType>
+            <isRequired>true</isRequired>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <choices>
+        <name>Choice_Casual</name>
+        <choiceText>Casual Leave</choiceText>
+        <dataType>String</dataType>
+        <value><stringValue>Casual Leave</stringValue></value>
+    </choices>
+    <choices>
+        <name>Choice_Sick</name>
+        <choiceText>Sick Leave</choiceText>
+        <dataType>String</dataType>
+        <value><stringValue>Sick Leave</stringValue></value>
+    </choices>
+    <choices>
+        <name>Choice_Earned</name>
+        <choiceText>Earned Leave</choiceText>
+        <dataType>String</dataType>
+        <value><stringValue>Earned Leave</stringValue></value>
+    </choices>
+    <choices>
+        <name>Choice_Emergency</name>
+        <choiceText>Emergency Leave</choiceText>
+        <dataType>String</dataType>
+        <value><stringValue>Emergency Leave</stringValue></value>
+    </choices>
+    <choices>
+        <name>Choice_Unpaid</name>
+        <choiceText>Unpaid Leave</choiceText>
+        <dataType>String</dataType>
+        <value><stringValue>Unpaid Leave</stringValue></value>
+    </choices>
+    <recordCreates>
+        <name>Create_Leave_Request</name>
+        <label>Create Leave Request</label>
+        <locationX>176</locationX>
+        <locationY>278</locationY>
+        <connector>
+            <targetReference>Success_Screen</targetReference>
+        </connector>
+        <inputAssignments>
+            <field>Employee__c</field>
+            <value><elementReference>Input_Employee</elementReference></value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Leave_Type__c</field>
+            <value><elementReference>Input_Leave_Type</elementReference></value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Start_Date__c</field>
+            <value><elementReference>Input_Start_Date</elementReference></value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>End_Date__c</field>
+            <value><elementReference>Input_End_Date</elementReference></value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Reason__c</field>
+            <value><elementReference>Input_Reason</elementReference></value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Status__c</field>
+            <value><stringValue>Submitted</stringValue></value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Approval_Level__c</field>
+            <value><stringValue>Manager</stringValue></value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Submitted_Date__c</field>
+            <value><elementReference>$Flow.CurrentDateTime</elementReference></value>
+        </inputAssignments>
+        <object>Leave_Request__c</object>
+    </recordCreates>
+    <screens>
+        <name>Success_Screen</name>
+        <label>Request Submitted</label>
+        <locationX>176</locationX>
+        <locationY>398</locationY>
+        <allowBack>false</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <fields>
+            <name>Success_Message</name>
+            <fieldText>&lt;p style="color: #718C72; font-weight: bold; font-size: 16px;"&gt;✓ Your leave request has been submitted successfully.&lt;/p&gt;&lt;p style="color: #6F6A64;"&gt;Your manager has been notified for initial review. You can track progress in your Leave History.&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Leave_Request_Form</targetReference>
+        </connector>
+    </start>
+    <status>Active</status>
+</Flow>

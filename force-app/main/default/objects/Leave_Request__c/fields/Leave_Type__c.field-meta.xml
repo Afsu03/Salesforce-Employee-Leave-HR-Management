@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Leave_Type__c</fullName>
+    <description>Category of leave requested.</description>
+    <externalId>false</externalId>
+    <label>Leave Type</label>
+    <required>true</required>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value><fullName>Casual Leave</fullName><default>true</default><label>Casual Leave</label></value>
+            <value><fullName>Sick Leave</fullName><default>false</default><label>Sick Leave</label></value>
+            <value><fullName>Earned Leave</fullName><default>false</default><label>Earned Leave</label></value>
+            <value><fullName>Emergency Leave</fullName><default>false</default><label>Emergency Leave</label></value>
+            <value><fullName>Unpaid Leave</fullName><default>false</default><label>Unpaid Leave</label></value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

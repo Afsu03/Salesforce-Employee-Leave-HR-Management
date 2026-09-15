@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>61.0</apiVersion>
+    <decisions>
+        <name>Check_Leave_Type_Category</name>
+        <label>Check Leave Type Category</label>
+        <locationX>446</locationX>
+        <locationY>323</locationY>
+        <defaultConnectorLabel>No Deduction (Unpaid / Other)</defaultConnectorLabel>
+        <rules>
+            <name>Is_Casual_Leave</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Leave_Type__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue><stringValue>Casual Leave</stringValue></rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Deduct_Casual_Leave</targetReference>
+            </connector>
+            <label>Casual Leave</label>
+        </rules>
+        <rules>
+            <name>Is_Sick_Leave</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Leave_Type__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue><stringValue>Sick Leave</stringValue></rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Deduct_Sick_Leave</targetReference>
+            </connector>
+            <label>Sick Leave</label>
+        </rules>
+        <rules>
+            <name>Is_Earned_Leave</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Leave_Type__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue><stringValue>Earned Leave</stringValue></rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Deduct_Earned_Leave</targetReference>
+            </connector>
+            <label>Earned Leave</label>
+        </rules>
+    </decisions>
+    <description>Automatically deducts leave days from employee balance quota upon final approval.</description>
+    <environments>Default</environments>
+    <formulas>
+        <name>Formula_New_Casual_Used</name>
+        <dataType>Number</dataType>
+        <expression>{!$Record.Employee__r.Used_Casual_Leave__c} + {!$Record.Leave_Days__c}</expression>
+        <scale>0</scale>
+    </formulas>
+    <formulas>
+        <name>Formula_New_Sick_Used</name>
+        <dataType>Number</dataType>
+        <expression>{!$Record.Employee__r.Used_Sick_Leave__c} + {!$Record.Leave_Days__c}</expression>
+        <scale>0</scale>
+    </formulas>
+    <formulas>
+        <name>Formula_New_Earned_Used</name>
+        <dataType>Number</dataType>
+        <expression>{!$Record.Employee__r.Used_Earned_Leave__c} + {!$Record.Leave_Days__c}</expression>
+        <scale>0</scale>
+    </formulas>
+    <interviewLabel>Leave Balance Deduction Flow {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>FLW_Leave_Balance_Deduction</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value><stringValue>LightningFlowBuilder</stringValue></value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordUpdates>
+        <name>Deduct_Casual_Leave</name>
+        <label>Deduct Casual Leave</label>
+        <locationX>50</locationX>
+        <locationY>431</locationY>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value><elementReference>$Record.Employee__c</elementReference></value>
+        </filters>
+        <inputAssignments>
+            <field>Used_Casual_Leave__c</field>
+            <value><elementReference>Formula_New_Casual_Used</elementReference></value>
+        </inputAssignments>
+        <object>Employee__c</object>
+    </recordUpdates>
+    <recordUpdates>
+        <name>Deduct_Sick_Leave</name>
+        <label>Deduct Sick Leave</label>
+        <locationX>314</locationX>
+        <locationY>431</locationY>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value><elementReference>$Record.Employee__c</elementReference></value>
+        </filters>
+        <inputAssignments>
+            <field>Used_Sick_Leave__c</field>
+            <value><elementReference>Formula_New_Sick_Used</elementReference></value>
+        </inputAssignments>
+        <object>Employee__c</object>
+    </recordUpdates>
+    <recordUpdates>
+        <name>Deduct_Earned_Leave</name>
+        <label>Deduct Earned Leave</label>
+        <locationX>578</locationX>
+        <locationY>431</locationY>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value><elementReference>$Record.Employee__c</elementReference></value>
+        </filters>
+        <inputAssignments>
+            <field>Used_Earned_Leave__c</field>
+            <value><elementReference>Formula_New_Earned_Used</elementReference></value>
+        </inputAssignments>
+        <object>Employee__c</object>
+    </recordUpdates>
+    <start>
+        <locationX>320</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Check_Leave_Type_Category</targetReference>
+        </connector>
+        <doesRequireRecordChangedToMeetCriteria>true</doesRequireRecordChangedToMeetCriteria>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Status__c</field>
+            <operator>EqualTo</operator>
+            <value><stringValue>Final Approved</stringValue></value>
+        </filters>
+        <object>Leave_Request__c</object>
+        <recordTriggerType>Update</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>

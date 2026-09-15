@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Approval_Level__c</fullName>
+    <description>Identifies the active reviewing tier based on duration conditional routing.</description>
+    <externalId>false</externalId>
+    <label>Current Approval Level</label>
+    <required>false</required>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value><fullName>Manager</fullName><default>true</default><label>Manager</label></value>
+            <value><fullName>HR</fullName><default>false</default><label>HR</label></value>
+            <value><fullName>Final Approver</fullName><default>false</default><label>Final Approver</label></value>
+            <value><fullName>None</fullName><default>false</default><label>None</label></value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>
