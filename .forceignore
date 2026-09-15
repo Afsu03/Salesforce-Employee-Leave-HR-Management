@@ -17,3 +17,5 @@ tsconfig.node.json
 index.html
 README.md
 scripts/
+**/jsconfig.json
+**/.eslintrc.json
