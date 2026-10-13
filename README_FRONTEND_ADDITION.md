@@ -1,0 +1,1 @@
+Frontend scaffold added under /frontend with React + Vite + TypeScript, TailwindCSS, and basic pages (Login, Dashboard, Employees, Request Leave, Approvals). Run `npm install` in frontend and `npm run dev` to start the dev server.
